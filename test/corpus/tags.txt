@@ -1,0 +1,101 @@
+=========
+Basic tag
+=========
+
+<foo>
+
+---
+
+(source_file
+  (tag
+    (tag_open)
+    (tag_identifier)
+    (tag_close)
+  )
+)
+
+==============
+Long name tags
+==============
+
+<foo-bar>
+<foo-bar-barf>
+
+---
+
+(source_file
+  (tag
+    (tag_open)
+    (tag_identifier)
+    (tag_close))
+  (tag
+    (tag_open)
+    (tag_identifier)
+    (tag_close)
+  )
+)
+
+==============
+With selectors
+==============
+
+<self [d:flex] [bgc:#000 rd:8px] [c@hover:red4]>
+<self[d: flex] [bgc:#000 rd:   8px] [c@hover:red4]>
+
+---
+
+(source_file
+  (tag
+    (tag_open)
+    (tag_identifier)
+    (inline_style_open)
+      (inline_style_prop)
+    (inline_style_close)
+    (inline_style_open)
+      (inline_style_prop)
+      (inline_style_prop)
+    (inline_style_close)
+    (inline_style_open)
+      (inline_style_prop)
+    (inline_style_close)
+    (tag_close)
+  )
+  (tag
+    (tag_open)
+    (tag_identifier)
+    (inline_style_open)
+      (inline_style_prop)
+    (inline_style_close)
+    (inline_style_open)
+      (inline_style_prop)
+      (inline_style_prop)
+    (inline_style_close)
+    (inline_style_open)
+      (inline_style_prop)
+    (inline_style_close)
+    (tag_close)
+  )
+)
+
+===========
+Nested tags
+===========
+
+<foo-bar>
+  <div[rd:10px bgc:red]
+    <p> "Hello"
+
+===============
+Tag declarations
+===============
+
+tag Foo
+    <self>
+        <p> "Hello"
+
+export default tag Bar
+    <self>
+        <div>
+
+export tag Baz
+    <self>
