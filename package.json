@@ -1,24 +1,33 @@
 {
   "name": "tree-sitter-imba",
-  "version": "0.0.1",
-  "description": "Imba grammar for tree-sitter",
+  "version": "0.0.2",
+  "description": "",
   "main": "bindings/node",
+  "type": "commonjs",
+  "scripts": {
+    "gen": "imbac grammar.imba --cjs && tree-sitter generate grammar.js",
+    "watch": "imbac grammar.imba --cjs -w",
+    "test": "npm run gen && tree-sitter test",
+    "dev": "nodemon --exec npm run test --watch grammar.imba --watch test/**/*",
+    "hi": "npm run gen && tree-sitter highlight ./test/test.imba"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
   "dependencies": {
     "nan": "^2.17.0"
   },
-  "scripts": {
-    "build": "imbac grammar.imba && tree-sitter generate",
-    "hi": "npm run build && tree-sitter highlight test/test.imba",
-    "test": "npm run build && tree-sitter test"
+  "devDependencies": {
+    "imba": "^2.0.0-alpha.226",
+    "nodemon": "^2.0.20",
+    "tree-sitter-cli": "^0.20.7"
   },
   "tree-sitter": [
     {
-      "scope": "source.js",
+      "scope": "source.imba",
       "file-types": [
-        "imba"
-      ],
-      "highlights": [
-        "queries/highlights.scm"
+        "imba",
+        "imba1"
       ]
     }
   ]
