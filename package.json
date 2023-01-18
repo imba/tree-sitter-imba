@@ -7,9 +7,10 @@
   "scripts": {
     "gen": "imbac grammar.imba --cjs && tree-sitter generate grammar.js",
     "watch": "imbac grammar.imba --cjs -w",
-    "test": "npm run gen && tree-sitter test",
-    "dev": "nodemon --exec npm run test --watch grammar.imba --watch test/**/*",
-    "hi": "npm run gen && tree-sitter highlight ./test/test.imba"
+    "test": "npm run gen && tree-sitter test -d -D",
+    "dev": "nodemon --exec npm run test --watch grammar.imba --watch test/**/* --watch queries/**/* --watch src/scanner.cc",
+    "hi": "npm run gen && tree-sitter highlight ./test/test.imba",
+    "parse": "npm run gen && tree-sitter parse ./test/test.imba -d"
   },
   "keywords": [],
   "author": "",

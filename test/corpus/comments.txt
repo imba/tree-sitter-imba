@@ -7,3 +7,31 @@ comments
 ---
 
 (program (comment))
+
+======
+multi comments
+======
+
+# this is a comment
+# this is the second one
+
+---
+(program 
+	(comment)
+	(comment))
+
+====
+simple if statement
+====
+
+if continue
+	continue
+	# comment here
+# comment 2
+
+---
+(program
+	(if_statement (continue_statement)
+		(continue_statement)
+		(comment))
+	(comment))
