@@ -5,6 +5,7 @@
   "main": "bindings/node",
   "type": "commonjs",
   "scripts": {
+    "build": "npm run gen && node-gyp build",
     "gen": "imbac grammar.imba --cjs && tree-sitter generate grammar.js",
     "watch": "imbac grammar.imba --cjs -w",
     "test": "npm run gen && tree-sitter test -d",
