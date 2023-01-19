@@ -6,6 +6,7 @@ function sep1(rule,separator){
 	
 	return seq(rule,repeat(seq(separator,rule)));
 };
+
 module.exports = grammar(
 	{name: "imba",
 	
@@ -52,13 +53,20 @@ module.exports = grammar(
 		
 		if_statement: function(_0) { return seq(
 			choice('if','unless'),
-			_0._simple_statement,
-			_0._suite
+			field('condition',_0._simple_statement),
+			field('consequence',_0._suite)
 		); },
 		
 		_suite: function(_0) { return choice(
-			// seq($1._simple_statement, $1._newline)
-						seq(_0._indent,repeat1(_0._statement),_0._dedent)
+			// alias($1._simple_statement, $1.block) # this is for python's if a: b ?
+						
+						seq(_0._indent,_0.block)
+		// alias($1._newline, $1.block) # what is this one for?
+		); },
+		
+		block: function(_0) { return seq(
+			repeat1(_0._statement),
+			_0._dedent
 		); },
 		
 		_simple_statement: function(_0) { return choice(

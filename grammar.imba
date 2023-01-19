@@ -2,6 +2,7 @@ const SEMICOLON = ';'
 
 def sep1 rule, separator
 	seq rule, repeat(seq(separator, rule))
+
 module.exports = grammar
 	name: "imba"
 
@@ -48,13 +49,20 @@ module.exports = grammar
 		
 		if_statement: do seq(
 			choice('if', 'unless')
-			$1._simple_statement
-			$1._suite
+			field('condition', $1._simple_statement)
+			field('consequence', $1._suite)
 		)
 
 		_suite: do choice(
-			# seq($1._simple_statement, $1._newline)
-			seq($1._indent, repeat1($1._statement), $1._dedent)
+			# alias($1._simple_statement, $1.block) # this is for python's if a: b ?
+			
+			seq($1._indent, $1.block)
+			# alias($1._newline, $1.block) # what is this one for?
+		)
+
+		block: do seq(
+			repeat1 $1._statement
+			$1._dedent
 		)
 		
 		_simple_statement: do choice(
