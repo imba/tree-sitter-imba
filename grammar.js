@@ -82,7 +82,7 @@ module.exports = grammar(
 		
 		continue_statement: function() { return "continue"; },
 		
-		comment: function() { return token(seq('#',/.*/)); }
+		comment: function() { return token(seq('# ',/.*/)); }
 	}}
 );
 

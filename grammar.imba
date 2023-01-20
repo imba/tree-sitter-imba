@@ -78,5 +78,5 @@ module.exports = grammar
 
 		continue_statement: do "continue"
 
-		comment: do token seq('#', /.*/)
+		comment: do token seq('# ', /.*/)
 
