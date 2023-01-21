@@ -1,26 +1,73 @@
 [
   {
+    "type": "expression",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "primary_expression",
+        "named": true
+      }
+    ]
+  },
+  {
+    "type": "primary_expression",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "false",
+        "named": true
+      },
+      {
+        "type": "no",
+        "named": true
+      },
+      {
+        "type": "null",
+        "named": true
+      },
+      {
+        "type": "true",
+        "named": true
+      },
+      {
+        "type": "yes",
+        "named": true
+      }
+    ]
+  },
+  {
+    "type": "statement",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "expression",
+        "named": true
+      },
+      {
+        "type": "if_statement",
+        "named": true
+      }
+    ]
+  },
+  {
     "type": "block",
     "named": true,
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
-          "type": "comment",
-          "named": true
-        },
-        {
-          "type": "continue_statement",
-          "named": true
-        },
-        {
-          "type": "if_statement",
+          "type": "statement",
           "named": true
         }
       ]
     }
+  },
+  {
+    "type": "comment",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "if_statement",
@@ -31,11 +78,7 @@
         "required": true,
         "types": [
           {
-            "type": "comment",
-            "named": true
-          },
-          {
-            "type": "continue_statement",
+            "type": "expression",
             "named": true
           }
         ]
@@ -61,35 +104,11 @@
       "required": false,
       "types": [
         {
-          "type": "comment",
-          "named": true
-        },
-        {
-          "type": "continue_statement",
-          "named": true
-        },
-        {
-          "type": "if_statement",
+          "type": "statement",
           "named": true
         }
       ]
     }
-  },
-  {
-    "type": "\n",
-    "named": false
-  },
-  {
-    "type": ";",
-    "named": false
-  },
-  {
-    "type": "comment",
-    "named": true
-  },
-  {
-    "type": "continue_statement",
-    "named": true
   },
   {
     "type": "false",
@@ -109,10 +128,6 @@
   },
   {
     "type": "true",
-    "named": true
-  },
-  {
-    "type": "undefined",
     "named": true
   },
   {

@@ -1,4 +1,4 @@
 # This is just a comment
-if continue
+if yes
 	# I'm a comment too
-	continue
+	yes

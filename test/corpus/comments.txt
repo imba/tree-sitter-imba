@@ -23,37 +23,27 @@ multi comments
   (comment))
 
 ================================================================================
-continue statement 
-================================================================================
-
-continue
---------------------------------------------------------------------------------
-
-(program
-  (continue_statement))
-
-================================================================================
 simple if statement
 ================================================================================
 
-if continue
-	continue
+if yes
+	yes
 	# comment here
-	continue
+	yes
 # comment 2
-continue
+yes
 
 --------------------------------------------------------------------------------
 
 (program
   (if_statement
-    condition: (continue_statement)
+    condition: (yes)
     consequence: (block
-      (continue_statement)
+      (yes)
       (comment)
-      (continue_statement)
+      (yes)
     )
   )
   (comment)
-  (continue_statement)
+  (yes)
 )

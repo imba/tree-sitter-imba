@@ -5,4 +5,14 @@
   "unless"  
 ] @keyword
 
-(continue_statement) @keyword
+; (continue_statement) @keyword
+
+; Literals
+
+[
+  (null)
+  (true)
+  (yes)
+  (no)
+  (false)
+] @constant.builtin
