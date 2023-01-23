@@ -12,9 +12,8 @@
     "dev": "nodemon --exec npm run test --watch grammar.imba --watch 'test/**/*' --watch 'queries/**/*' --watch src/scanner.cc ",
     "hi": "npm run gen && tree-sitter highlight ./test/test.imba",
     "parse": "npm run gen && tree-sitter parse ./test/test.imba",
-    "wasm": "tree-sitter build-wasm",
-    "pg": "tree-sitter playground",
-    "playground": "tree-sitter playground"
+    "wasm": "npm run build && tree-sitter build-wasm",
+    "pg": "npm run wasm && tree-sitter playground"
   },
   "keywords": [],
   "author": "",

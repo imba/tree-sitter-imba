@@ -1,5 +1,15 @@
 [
   {
+    "type": "declaration",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "class_declaration",
+        "named": true
+      }
+    ]
+  },
+  {
     "type": "expression",
     "named": true,
     "subtypes": [
@@ -18,6 +28,14 @@
         "named": true
       },
       {
+        "type": "identifier",
+        "named": true
+      },
+      {
+        "type": "import",
+        "named": true
+      },
+      {
         "type": "no",
         "named": true
       },
@@ -26,7 +44,19 @@
         "named": true
       },
       {
+        "type": "super",
+        "named": true
+      },
+      {
+        "type": "this",
+        "named": true
+      },
+      {
         "type": "true",
+        "named": true
+      },
+      {
+        "type": "undefined",
         "named": true
       },
       {
@@ -39,6 +69,10 @@
     "type": "statement",
     "named": true,
     "subtypes": [
+      {
+        "type": "declaration",
+        "named": true
+      },
       {
         "type": "expression",
         "named": true
@@ -65,9 +99,103 @@
     }
   },
   {
+    "type": "class_body",
+    "named": true,
+    "fields": {
+      "member": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "field_definition",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "class_declaration",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "class_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "class_heritage",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "class_heritage",
+    "named": true,
+    "fields": {
+      "extends": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "<",
+            "named": false
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "comment",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "field_definition",
+    "named": true,
+    "fields": {
+      "property": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "property_identifier",
+            "named": true
+          }
+        ]
+      }
+    }
   },
   {
     "type": "if_statement",
@@ -111,12 +239,32 @@
     }
   },
   {
+    "type": "<",
+    "named": false
+  },
+  {
+    "type": "class",
+    "named": false
+  },
+  {
+    "type": "export",
+    "named": false
+  },
+  {
     "type": "false",
+    "named": true
+  },
+  {
+    "type": "identifier",
     "named": true
   },
   {
     "type": "if",
     "named": false
+  },
+  {
+    "type": "import",
+    "named": true
   },
   {
     "type": "no",
@@ -127,7 +275,27 @@
     "named": true
   },
   {
+    "type": "property_identifier",
+    "named": true
+  },
+  {
+    "type": "static",
+    "named": false
+  },
+  {
+    "type": "super",
+    "named": true
+  },
+  {
+    "type": "this",
+    "named": true
+  },
+  {
     "type": "true",
+    "named": true
+  },
+  {
+    "type": "undefined",
     "named": true
   },
   {

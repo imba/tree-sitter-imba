@@ -3,7 +3,16 @@
 [
   "if" 
   "unless"  
+  "class"
+  "export"
+  "static"
 ] @keyword
+
+[
+  "<"
+] @operator
+
+(identifier) @variable
 
 ; (continue_statement) @keyword
 
@@ -15,4 +24,7 @@
   (yes)
   (no)
   (false)
+  (undefined)
+  (super)
+  (import)
 ] @constant.builtin

@@ -17,7 +17,7 @@ module.exports = grammar
 	### 
 	supertypes: do [
 		$1.statement
-		# $1.declaration
+		$1.declaration
 		$1.expression
 		$1.primary_expression
 		# $1.pattern
@@ -30,14 +30,14 @@ module.exports = grammar
 	# This is useful for rules that are used in multiple places but for which
 	# you don’t want to create syntax tree nodes at runtime.
 	###
-	# inline: do [
+	inline: do [
 	# 	$1._call_signature
 	# 	$1._formal_parameter
-	# 	$1.statement
+		$1.statement
 	# 	$1._expressions
 	# 	$1._semicolon
-	# 	$1._identifier
-	# 	$1._reserved_identifier
+		$1._identifier
+		$1._reserved_identifier
 	# 	$1._jsx_attribute
 	# 	$1._jsx_element_name
 	# 	$1._jsx_child
@@ -46,7 +46,7 @@ module.exports = grammar
 	# 	$1._jsx_attribute_value
 	# 	$1._jsx_identifier
 	# 	$1._lhs_expression
-	# ],
+	],
 
 
 	### precedences
@@ -54,8 +54,8 @@ module.exports = grammar
 	# These names can be used in the prec functions to define precedence relative only to other names 
 	# in the array, rather than globally. Can only be used with parse precedence, not lexical precedence.
 	###
-	# precedences: do [
-	# 	[
+	precedences: do [
+	# [
 	# 		'member'
 	# 		'call'
 	# 		$1.update_expression
@@ -78,11 +78,11 @@ module.exports = grammar
 	# 	],
 	# 	['assign', $1.primary_expression]
 	# 	['member', 'new', 'call', $1.expression]
-	# 	['declaration', 'literal']
+		['declaration', 'literal']
 	# 	[$1.primary_expression, $1.statement_block, 'object']
 	# 	[$1.import_statement, $1.import]
 	# 	[$1.export_statement, $1.primary_expression]
-	# ],
+	],
 
 
 	### extras
@@ -103,8 +103,28 @@ module.exports = grammar
 		program: do repeat $1.statement
 		
 		statement: do choice
-			$1.if_statement
+			# $1.export_statement
+			# $1.import_statement
+			# $1.debugger_statement
 			$1.expression
+			$1.declaration
+			# $1.statement_block
+
+			$1.if_statement
+			# $1.switch_statement
+			# $1.for_statement
+			# $1.for_in_statement
+			# $1.while_statement
+			# $1.do_statement
+			# $1.try_statement
+			# $1.with_statement
+
+			# $1.break_statement
+			# $1.continue_statement
+			# $1.return_statement
+			# $1.throw_statement
+			# $1.empty_statement
+			# $1.labeled_statement
 			
 		if_statement: do seq
 			choice('if', 'unless')
@@ -114,20 +134,108 @@ module.exports = grammar
 		expression: do choice
 			$1.primary_expression
 
+		_identifier: do choice($1.undefined, $1.identifier)
 
-		primary_expression: do choice
+
+		primary_expression: do choice(
+			# $1.subscript_expression
+			# $1.member_expression
+			# $1.parenthesized_expression
+			$1._identifier
+			alias($1._reserved_identifier, $1.identifier)
+			$1.this
+			$1.super
+			# $1.number
+			# $1.string
+			# $1.template_string
+			# $1.regex
 			$1.true
-			$1.false
 			$1.yes
 			$1.no
+			$1.false
 			$1.null
-			
+			$1.import
+			# $1.object
+			# $1.array
+			# $1.function
+			# $1.arrow_function
+			# $1.generator_function
+			# $1.class
+			# $1.meta_property
+			# $1.call_expression,
+		)
+		
+		declaration: do choice(
+			# $1.function_declaration
+			# $1.generator_function_declaration
+			$1.class_declaration
+			# $1.lexical_declaration
+			# $1.variable_declaration
+		)
+
+		class_declaration: do seq(
+			# repeat(field('decorator', $1.decorator))
+			'class'
+			field('name', $1.identifier)
+			optional($1.class_heritage)
+			field('body', $1.class_body)
+			$1._dedent
+			# optional($1._automatic_semicolon)
+		)
+
+		class_heritage: do seq(field('extends', '<'), $1.expression)
+
+		class_body: do seq(
+			$1._indent
+			repeat choice(
+				# seq(field('member', $1.method_definition))
+				seq(field('member', $1.field_definition))
+				# field('member', $1.class_static_block)
+				# field('template', $1.glimmer_template)
+			)
+		)
+
+		field_definition: do seq(
+			# repeat(field('decorator', $1.decorator)),
+			optional('static'),
+			field('property', $1._property_name),
+			# optional($1._initializer)
+		)
+
+		_property_name: do choice(
+			alias(choice(
+				$1.identifier,
+				$1._reserved_identifier
+			), $1.property_identifier),
+			# $1.private_property_identifier,
+			# $1.string,
+			# $1.number,
+			# $1.computed_property_name	
+		)
+
+		_reserved_identifier: do choice(
+			# 'get'
+			# 'set'
+			# 'async'
+			# 'static'
+			'export'
+		)
+	
+		
+		identifier: do
+			const alpha = /[^\x00-\x1F\s\p{Zs}0-9:;`"'@#.,|^&<=>+\-*/\\%?!~()\[\]{}\uFEFF\u2060\u200B]|\\u[0-9a-fA-F]{4}|\\u\{[0-9a-fA-F]+\}/
+			const alphanumeric = /[^\x00-\x1F\s\p{Zs}:;`"'@#.,|^&<=>+\-*/\\%?!~()\[\]{}\uFEFF\u2060\u200B]|\\u[0-9a-fA-F]{4}|\\u\{[0-9a-fA-F]+\}/
+			return token(seq(alpha, repeat(alphanumeric)))
 
 		true: do 'true'
 		false: do 'false'
 		yes: do 'yes'
 		no: do 'no'
 		null: do 'null'
+		this: do 'this'
+		super: do 'super'
+		import: do token('import')
+		undefined: do 'undefined'
 
 		# _keyword_variable: do choice(
 

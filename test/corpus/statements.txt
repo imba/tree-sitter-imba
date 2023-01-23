@@ -1,0 +1,20 @@
+================================================================================
+class declaration
+================================================================================
+class Worker < Base
+	a
+	b
+# comment
+--------------------------------------------------------------------------------
+
+(program
+  (class_declaration
+    (identifier)
+    (class_heritage
+      (identifier))
+    (class_body
+      (field_definition
+        (property_identifier))
+      (field_definition
+        (property_identifier))))
+  (comment))
