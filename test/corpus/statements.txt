@@ -1,10 +1,29 @@
 ================================================================================
-class declaration
+class declaration with getter
 ================================================================================
 class Worker < Base
-	a
+	get a
+		true
+--------------------------------------------------------------------------------
+
+(program
+  (class_declaration
+    (identifier)
+    (class_heritage
+      (identifier))
+    (class_body
+      (getter
+        (property_identifier)
+        (statement_block
+          (true))))))
+
+================================================================================
+class declaration with multiple defs
+================================================================================
+class Worker < Base
 	b
-# comment
+	get a
+		true
 --------------------------------------------------------------------------------
 
 (program
@@ -15,6 +34,297 @@ class Worker < Base
     (class_body
       (field_definition
         (property_identifier))
-      (field_definition
-        (property_identifier))))
-  (comment))
+      (getter
+        (property_identifier)
+        (statement_block
+          (true))))))
+
+================================================================================
+function declaration
+================================================================================
+def add
+	yes
+--------------------------------------------------------------------------------
+
+(program
+  (function_declaration
+    (identifier)
+    (statement_block
+      (yes))))
+
+================================================================================
+function declaration with if and other function
+================================================================================
+def add
+	yes
+	if yes
+		no
+	def sub
+		no
+--------------------------------------------------------------------------------
+
+(program
+  (function_declaration
+    (identifier)
+    (statement_block
+      (yes)
+      (if_statement
+        (yes)
+        (block
+          (no)))
+      (function_declaration
+        (identifier)
+        (statement_block
+          (no))))))
+
+================================================================================
+function declaration with params
+================================================================================
+def add(one, two)
+	one
+
+def sub one, two
+	two
+--------------------------------------------------------------------------------
+
+(program
+  (function_declaration
+    (identifier)
+    (formal_parameters
+      (identifier)
+      (identifier))
+    (statement_block
+      (identifier)))
+  (function_declaration
+    (identifier)
+    (formal_parameters
+      (identifier)
+      (identifier))
+    (statement_block
+      (identifier))))
+
+================================================================================
+class declaration with method defs
+================================================================================
+class Worker < Base
+	def add
+		true
+--------------------------------------------------------------------------------
+
+(program
+  (class_declaration
+    (identifier)
+    (class_heritage
+      (identifier))
+    (class_body
+      (method_definition
+        (property_identifier)
+        (statement_block
+          (true))))))
+
+================================================================================
+class declaration with setter
+================================================================================
+class Worker < Base
+	set add val
+		val
+--------------------------------------------------------------------------------
+
+(program
+  (class_declaration
+    (identifier)
+    (class_heritage
+      (identifier))
+    (class_body
+      (setter
+        (property_identifier)
+        (formal_parameters
+          (identifier))
+        (statement_block
+          (identifier))))))
+
+================================================================================
+class declaration with inline method defs
+================================================================================
+class Worker < Base
+	set add val do val
+	get a do true
+	def constructor do super
+--------------------------------------------------------------------------------
+
+(program
+  (class_declaration
+    (identifier)
+    (class_heritage
+      (identifier))
+    (class_body
+      (setter
+        (property_identifier)
+        (formal_parameters
+          (identifier))
+        (statement_block
+          (arrow_function
+            (identifier))))
+      (getter
+        (property_identifier)
+        (statement_block
+          (arrow_function
+            (true))))
+      (method_definition
+        (property_identifier)
+        (statement_block
+          (arrow_function
+            (super)))))))
+
+================================================================================
+return stm
+================================================================================
+def add
+	return yes
+--------------------------------------------------------------------------------
+
+(program
+  (function_declaration
+    (identifier)
+    (statement_block
+      (return_statement
+        (yes)))))
+
+============================================
+Imports
+============================================
+
+import defaultMember from "module-name";
+import * as name from "module-name";
+import { member } from "module-name";
+import { member1 , member2 } from "module-name";
+import { member1 , member2 as alias2 } from "module-name";
+import { "string name" as alias } from "module-name";
+import defaultMember, { member1, member2 as alias2 } from "module-name";
+import defaultMember, * as name from "module-name";
+import "module-name";
+import { member1 , member2 as alias2, } from "module-name";
+# import("a");
+# import("a").then((m) => {});
+# import.meta.url;
+
+----
+
+(program
+  (import_statement
+    (import_clause (identifier)) (string (string_fragment)))
+  (import_statement
+    (import_clause (namespace_import (identifier))) (string (string_fragment)))
+  (import_statement
+    (import_clause (named_imports (import_specifier (identifier)))) (string (string_fragment)))
+  (import_statement
+    (import_clause (named_imports (import_specifier (identifier)) (import_specifier (identifier)))) (string (string_fragment)))
+  (import_statement
+    (import_clause (named_imports (import_specifier (identifier)) (import_specifier (identifier) (identifier)))) (string (string_fragment)))
+  (import_statement
+    (import_clause (named_imports (import_specifier (string (string_fragment)) (identifier)))) (string (string_fragment)))
+  (import_statement
+    (import_clause (identifier) (named_imports (import_specifier (identifier)) (import_specifier (identifier) (identifier)))) (string (string_fragment)))
+  (import_statement
+    (import_clause (identifier) (namespace_import (identifier))) (string (string_fragment)))
+  (import_statement
+    (string (string_fragment)))
+  (import_statement
+    (import_clause (named_imports (import_specifier (identifier)) (import_specifier (identifier) (identifier)))) (string (string_fragment)))
+  (comment)  (comment)  (comment))
+
+
+============================================
+Exports
+============================================
+
+export { name1, name2, name3, nameN };
+export { variable1 as name1, variable2 as name2, nameN };
+export { variable1 as "string name" };
+export let name1, name2, nameN;
+export let name1 = value1, name2 = value2, name3, nameN;
+
+export default expression;
+export default { field1: 42, field2: [] }
+export default do yes
+export default def name1
+  yes
+export { name1 as default };
+
+export * from 'foo';
+export * as someIdentifier from "someModule";
+export * as "string name" from "someModule";
+export { name1, name2, nameN } from 'foo';
+export { import1 as name1, import2 as name2, nameN } from 'foo';
+export { import1 as "string name" } from 'foo';
+export { "string import" as "string export" } from 'foo';
+
+----
+
+(program
+  (export_statement
+    (export_clause
+      (export_specifier name: (identifier))
+      (export_specifier name: (identifier))
+      (export_specifier name: (identifier))
+      (export_specifier name: (identifier))))
+  (export_statement
+    (export_clause
+      (export_specifier name: (identifier) alias: (identifier))
+      (export_specifier name: (identifier) alias: (identifier))
+      (export_specifier name: (identifier))))
+  (export_statement
+    (export_clause
+      (export_specifier name: (identifier) alias: (string (string_fragment)))))
+  (export_statement
+    declaration: (lexical_declaration
+      (variable_declarator name: (identifier))
+      (variable_declarator name: (identifier))
+      (variable_declarator name: (identifier))))
+  (export_statement
+    declaration: (lexical_declaration
+      (variable_declarator name: (identifier) value: (identifier))
+      (variable_declarator name: (identifier) value: (identifier))
+      (variable_declarator name: (identifier))
+      (variable_declarator name: (identifier))))
+  (export_statement
+    value: (identifier))
+  (export_statement
+    value: (object
+      (pair key: (property_identifier) value: (number))
+      (pair key: (property_identifier) value: (array))))
+  (export_statement
+    value: (function parameters: (formal_parameters) body: (statement_block)))
+  (export_statement
+    declaration: (function_declaration name: (identifier) parameters: (formal_parameters) body: (statement_block)))
+  (export_statement
+    (export_clause (export_specifier name: (identifier) alias: (identifier))))
+  (export_statement
+    source: (string (string_fragment)))
+  (export_statement
+    (namespace_export (identifier))
+    source: (string (string_fragment)))
+  (export_statement
+    (namespace_export (string (string_fragment)))
+    source: (string (string_fragment)))
+  (export_statement
+    (export_clause
+      (export_specifier name: (identifier))
+      (export_specifier name: (identifier))
+      (export_specifier name: (identifier)))
+    source: (string (string_fragment)))
+  (export_statement
+    (export_clause
+      (export_specifier name: (identifier) alias: (identifier))
+      (export_specifier name: (identifier) alias: (identifier))
+      (export_specifier name: (identifier)))
+    source: (string (string_fragment)))
+  (export_statement
+    (export_clause
+      (export_specifier name: (identifier) alias: (string (string_fragment))))
+    source: (string (string_fragment)))
+  (export_statement
+    (export_clause
+      (export_specifier name: (string (string_fragment)) alias: (string (string_fragment))))
+    source: (string (string_fragment))))
+

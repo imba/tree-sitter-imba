@@ -1,22 +1,139 @@
-============================================
+================================================================================
 single token expressions
-============================================
+================================================================================
 
 true
+"abc"
 false
 yes
 no
 null
 super
 this
-----
+num
+num-with-dashes
+is-fine?
+--------------------------------------------------------------------------------
 
 (program
-	(true)
-	(false)
-	(yes)
-	(no)
-	(null)
-	(super)
-	(this)
-)
+  (true)
+  (string
+    (string_fragment))
+  (false)
+  (yes)
+  (no)
+  (null)
+  (super)
+  (this)
+  (identifier)
+  (identifier)
+  (identifier))
+
+================================================================================
+Numbers
+================================================================================
+
+101;
+3.14
+3.14e+1;
+0x1ABCDEFabcdef
+0o7632157312;
+0b1010101001;
+1e+3
+--------------------------------------------------------------------------------
+
+(program
+  (number)
+  (number)
+  (number)
+  (number)
+  (number)
+  (number)
+  (number))
+
+================================================================================
+Assignments
+================================================================================
+
+x = 0;
+x.y = 0;
+x["y"] = 0;
+x += 1;
+x &&= 0;
+
+--------------------------------------------------------------------------------
+
+(program
+  (assignment_expression
+    (identifier)
+    (number))
+  (assignment_expression
+    (member_expression
+      (identifier)
+      (property_identifier))
+    (number))
+  (assignment_expression
+    (subscript_expression
+      (identifier)
+      (string
+        (string_fragment)))
+    (number))
+  (augmented_assignment_expression
+    (identifier)
+    (number))
+  (augmented_assignment_expression
+    (identifier)
+    (number)))
+
+============================================
+Objects
+============================================
+
+{}
+{ a: "b" }
+{ c: "d", "e": f, 1: 2 }
+{
+	g: h
+}
+
+{
+  [methodName]: do 1
+  a: do
+    hello = 2
+}
+let a = {a: 3}
+# Add indentation rules for objects
+---
+(program)
+
+============================================
+Function calls
+============================================
+
+method(1, 2, 3)
+method("test", do 1)
+# met 1
+# x.someMethod(arg1, "arg2")
+# method 1, 2, 3
+# x.someM a1, "so"
+---
+
+    (program
+      (call_expression
+        (identifier)
+        (arguments
+          (number)
+          (number)
+          (number)))
+      (call_expression
+        (identifier)
+        (arguments
+          (string
+            (string_fragment))
+          (arrow_function
+            (number))))
+      (comment)
+      (comment)
+      (comment)
+      (comment)
+      )
