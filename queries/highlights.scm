@@ -13,8 +13,10 @@
  (#match? @constructor "^[A-Z]"))
 
 ((identifier) @variable.builtin
- (#match? @variable.builtin "^(arguments|module|console|window|document|self|imba|\\$\\d+)$")
+ (#match? @variable.builtin "^(arguments|global|module|console|window|document|self|imba|\\$\\d+)$")
  (#is-not? local))
+
+(private_property_identifier) @variable.builtin
 
 ; ((identifier) @function.builtin
 ;  (#eq? @function.builtin "require")
@@ -175,6 +177,7 @@
   "get"
   "do"
   "set"
+  "prop"
 ;   "in"
 ;   "instanceof"
 ;   "new"

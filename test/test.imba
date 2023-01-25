@@ -8,9 +8,11 @@ class Worker < Base
 	# set a do yes
 	# docs for a
 	# returns a
+	#dwcc
 	def a
 		true
 		$1
+		#dwcc = 3
 		def cc(ss, tc)
 			yes
 
