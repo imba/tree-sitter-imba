@@ -10,4 +10,4 @@ package-lock.json
 *.so
 *.o
 bindings/c/*.h
-.build/
+.build/.wireit
