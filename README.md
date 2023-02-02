@@ -1,7 +1,7 @@
 # tree-sitter-imba
 
 ## Working on the grammar
-    tldr; run `npm run only`, you should get a failing test. Fix it, that's the current focus. This grammar uses javascript grammar token names (except expression -> expression_statement. I forgot why). You can safely copy paste and adapt.
+    tldr; run `npm run only`, you should get a failing test. Fix it, that's the current focus (tags atm.). This grammar uses javascript grammar token names (except expression -> expression_statement. I forgot why). You can safely copy paste and adapt.
 
 ### Test driven development
 	This is the recommended way most of the time.
