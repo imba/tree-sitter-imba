@@ -85,9 +85,9 @@ x &&= 0;
     (identifier)
     (number)))
 
-============================================
-Objects
-============================================
+================================================================================
+Objects (no indentation)
+================================================================================
 
 {}
 { a: "b" }
@@ -98,17 +98,205 @@ Objects
 
 {
   [methodName]: do 1
-  a: do
-    hello = 2
 }
 let a = {a: 3}
 # Add indentation rules for objects
----
-(program)
+--------------------------------------------------------------------------------
+
+(program
+  (object)
+  (object
+    (pair
+      (property_identifier)
+      (string
+        (string_fragment))))
+  (object
+    (pair
+      (property_identifier)
+      (string
+        (string_fragment)))
+    (pair
+      (string
+        (string_fragment))
+      (identifier))
+    (pair
+      (number)
+      (number)))
+  (object
+    (pair
+      (property_identifier)
+      (identifier)))
+  (object
+    (pair
+      (computed_property_name
+        (identifier))
+      (arrow_function
+        (number))))
+  (lexical_declaration
+    (variable_declarator
+      (identifier)
+      (object
+        (pair
+          (property_identifier)
+          (number)))))
+  (comment))
 
 ============================================
-Function calls
+Arrays with indentation
 ============================================
+[
+	1
+	2
+	yes
+]
+[
+	{a: 3}
+	"yes"
+	[1, 2, 3]
+	[
+		1
+		2
+		3
+	]
+]
+---------------------------------------------
+(program
+	(array
+		(number)
+		(number)
+		(yes))
+	(array
+		(object
+			(pair
+				(property_identifier)
+				(number)))
+		(string
+			(string_fragment))
+		(array
+			(number)
+			(number)
+			(number))
+		(array
+			(number)
+			(number)
+			(number))))
+============================================
+Arrays
+============================================
+
+[];
+[ "item1" ];
+[ "item1", ];
+[ "item1", item2 ];
+[ , item2 ];
+[ item2 = 5 ];
+
+---
+
+(program
+  (array)
+  (array (string (string_fragment)))
+  (array (string (string_fragment)))
+  (array (string (string_fragment)) (identifier))
+  (array (identifier))
+  (array (assignment_expression (identifier) (number))))
+
+
+================================================================================
+Arrays with indentation and no parens mixed with objects
+================================================================================
+c =
+	a:
+		d: 4
+
+
+--------------------------------------------------------------------------------
+(program
+      (assignment_expression
+        (identifier)
+        (object
+          (pair
+            (property_identifier)
+            (object
+              (pair
+                (property_identifier)
+                (number)))))))
+================================================================================
+Objects with indentation and no parens
+================================================================================
+a =
+	help:
+		c: 3
+	count: yes
+	alpha: do 3
+	beta: do
+		let a = 3
+		return a
+--------------------------------------------------------------------------------
+(program
+	(assignment_expression
+		(identifier)
+		(object
+			(pair
+				(property_identifier)
+				(object
+					(pair
+						(property_identifier)
+						(number))))
+			(pair
+				(property_identifier)
+				(yes))
+			(pair
+				(property_identifier)
+				(arrow_function
+					(number)))
+			(pair
+				(property_identifier)
+				(arrow_function
+					(lexical_declaration
+						(variable_declarator
+							(identifier)
+							(number)))
+					(return_statement
+						(identifier)))))))
+================================================================================
+Objects with indentation and parentheses
+================================================================================
+a = {
+	help: 2
+	count: yes
+	alpha: do 3
+	beta: do
+		let a = 3
+		return a
+}
+--------------------------------------------------------------------------------
+(program
+	(assignment_expression
+		(identifier)
+		(object
+			(pair
+				(property_identifier)
+				(number))
+			(pair
+				(property_identifier)
+				(yes))
+			(pair
+				(property_identifier)
+				(arrow_function
+					(number)))
+			(pair
+				(property_identifier)
+				(arrow_function
+					(lexical_declaration
+						(variable_declarator
+							(identifier)
+							(number)))
+					(return_statement
+						(identifier)))))))
+================================================================================
+Function calls
+================================================================================
 
 method(1, 2, 3)
 method("test", do 1)
@@ -116,24 +304,23 @@ method("test", do 1)
 # x.someMethod(arg1, "arg2")
 # method 1, 2, 3
 # x.someM a1, "so"
----
+--------------------------------------------------------------------------------
 
-    (program
-      (call_expression
-        (identifier)
-        (arguments
-          (number)
-          (number)
-          (number)))
-      (call_expression
-        (identifier)
-        (arguments
-          (string
-            (string_fragment))
-          (arrow_function
-            (number))))
-      (comment)
-      (comment)
-      (comment)
-      (comment)
-      )
+(program
+  (call_expression
+    (identifier)
+    (arguments
+      (number)
+      (number)
+      (number)))
+  (call_expression
+    (identifier)
+    (arguments
+      (string
+        (string_fragment))
+      (arrow_function
+        (number))))
+  (comment)
+  (comment)
+  (comment)
+  (comment))

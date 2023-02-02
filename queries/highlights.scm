@@ -1,5 +1,6 @@
 ; ; Special identifiers
 ; ;--------------------
+(ERROR) @error
 
 ([
     (identifier)
@@ -13,8 +14,9 @@
  (#match? @constructor "^[A-Z]"))
 
 ((identifier) @variable.builtin
- (#match? @variable.builtin "^(arguments|global|module|console|window|document|self|imba|\\$\\d+)$")
- (#is-not? local))
+ (#match? @variable.builtin "^(describe|test|expect|arguments|global|module|console|window|document|self|imba|\\$\\d+)$")
+ ;(#is-not? local)
+ )
 
 (private_property_identifier) @variable.builtin
 
@@ -180,7 +182,7 @@
   "prop"
 ;   "in"
 ;   "instanceof"
-;   "new"
+  ; "new"
 ;   "of"
 ;   "set"
   "static"

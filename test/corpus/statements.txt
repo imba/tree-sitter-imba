@@ -44,13 +44,20 @@ function declaration
 ================================================================================
 def add
 	yes
+def subtract
+	no
+
 --------------------------------------------------------------------------------
 
 (program
   (function_declaration
     (identifier)
     (statement_block
-      (yes))))
+      (yes)))
+	(function_declaration
+    (identifier)
+    (statement_block
+      (no))))
 
 ================================================================================
 function declaration with if and other function
@@ -248,7 +255,7 @@ export default expression;
 export default { field1: 42, field2: [] }
 export default do yes
 export default def name1
-  yes
+	yes
 export { name1 as default };
 
 export * from 'foo';
@@ -294,10 +301,12 @@ export { "string import" as "string export" } from 'foo';
       (pair key: (property_identifier) value: (number))
       (pair key: (property_identifier) value: (array))))
   (export_statement
-    value: (function parameters: (formal_parameters) body: (statement_block)))
+    value: (arrow_function
+          body: (yes)))
   (export_statement
-    declaration: (function_declaration name: (identifier) parameters: (formal_parameters) body: (statement_block)))
-  (export_statement
+    declaration: (function_declaration name: (identifier) body: (statement_block
+            (yes))))
+	(export_statement
     (export_clause (export_specifier name: (identifier) alias: (identifier))))
   (export_statement
     source: (string (string_fragment)))

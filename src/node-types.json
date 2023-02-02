@@ -70,6 +70,10 @@
     "named": true,
     "subtypes": [
       {
+        "type": "array",
+        "named": true
+      },
+      {
         "type": "arrow_function",
         "named": true
       },
@@ -213,6 +217,25 @@
     }
   },
   {
+    "type": "array",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression_statement",
+          "named": true
+        },
+        {
+          "type": "spread_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "array_pattern",
     "named": true,
     "fields": {},
@@ -236,11 +259,11 @@
     "named": true,
     "fields": {
       "body": {
-        "multiple": false,
-        "required": true,
+        "multiple": true,
+        "required": false,
         "types": [
           {
-            "type": "expression_statement",
+            "type": "statement",
             "named": true
           }
         ]
@@ -514,7 +537,7 @@
     "fields": {
       "body": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "class_body",

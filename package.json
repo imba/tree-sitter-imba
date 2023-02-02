@@ -5,18 +5,40 @@
   "main": "bindings/node",
   "type": "commonjs",
   "scripts": {
-    "build": "npm run gen && node-gyp build",
-    "gen": "imbac grammar.imba --cjs && tree-sitter generate grammar.js",
-    "watch": "imbac grammar.imba --cjs -w",
-    "test": "npm run gen && tree-sitter test",
-    "test-debug": "npm run gen && tree-sitter test -d",
-    "dev": "nodemon --exec npm run test --watch grammar.imba --watch 'test/**/*' --watch 'queries/**/*' --watch src/scanner.cc ",
-    "debug": "nodemon --exec npm run test-debug --watch grammar.imba --watch 'test/**/*' --watch 'queries/**/*' --watch src/scanner.cc ",
-    "hi": "npm run gen && tree-sitter highlight ./test/test.imba",
-    "parse": "npm run gen && tree-sitter parse ./test/test.imba",
-    "wasm": "npm run build && tree-sitter build-wasm",
-    "pg": "npm run wasm && tree-sitter playground"
+    "build": "wireit",
+    "wasm": "wireit",
+    "pg": "wireit",
+		"test": "wireit"
   },
+	"wireit":{
+		"wasm": {
+			"command": "tree-sitter build-wasm",
+			"dependencies": ["build"]
+		},
+		"pg" :{
+			"command": "tree-sitter playground",
+			"dependencies": ["wasm"],
+			"service": true
+		},
+		"build": {
+			"command": "node-gyp build",
+			"dependencies": ["generate-grammar"]
+		},
+		"compile-grammar": {
+			"command": "imbac grammar.imba --cjs",
+			"output": ["grammar.js"],
+			"files": ["grammar.imba", "src/scanner.cc"]
+		},
+		"generate-grammar": {
+			"command": "tree-sitter generate grammar.js",
+			"dependencies": ["compile-grammar"]
+		},
+		"test": {
+			"command": "tree-sitter test",
+			"dependencies": ["generate-grammar"],
+			"files": ["test/**/*"]
+		}
+	},
   "keywords": [],
   "author": "",
   "license": "MIT",

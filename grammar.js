@@ -1,5 +1,17 @@
 
 /*body*/
+function newlineCommaSep(_,rule){
+	
+	return seq(
+		rule,
+		repeat(seq(
+			// _._newline
+						seq(optional(','),_._newline),
+			rule
+		))
+	);
+	// seq(rule, repeat(seq(seq(optional(","), _._newline), rule)))
+};
 
 function commaSep1(rule){
 	
@@ -41,7 +53,7 @@ module.exports = grammar(
 		[_0.primary_expression,_0.rest_pattern],
 		[_0.primary_expression,_0.pattern],
 		// [$1.primary_expression, $1._for_header],
-		// [$1.array, $1.array_pattern],
+		[_0.array,_0.array_pattern],
 		[_0.object,_0.object_pattern],
 		[_0.assignment_expression,_0.pattern],
 		[_0.assignment_expression,_0.object_assignment_pattern],
@@ -49,7 +61,10 @@ module.exports = grammar(
 		// [$1.computed_property_name, $1.array],
 		// [$1.binary_expression, $1._initializer],
 		[_0.declaration,_0.primary_expression],
-		[_0.subscript_expression,_0.arrow_function]
+		[_0.subscript_expression,_0.arrow_function],
+		[_0.program,_0.subscript_expression],
+		[_0._statement_block,_0.subscript_expression],
+		[_0._initializer,_0.subscript_expression]
 	]; },
 	
 	externals: function(_0) { return [
@@ -396,7 +411,7 @@ module.exports = grammar(
 			_0.null,
 			_0.import,
 			_0.object,
-			// $1.array
+			_0.array,
 			_0.function_declaration,
 			// $1.function
 			_0.arrow_function,
@@ -430,18 +445,49 @@ module.exports = grammar(
 		// 		$1.template_substitution
 		// 	'`'
 		
-		object: function(_0) { return prec('object',seq(
-			'{',
-			commaSep(optional(choice(
-				_0.pair,
-				_0.spread_element,
-				_0.method_definition,
-				alias(
-					choice(_0.identifier,_0._reserved_identifier),
-					_0.shorthand_property_identifier
-				)
-			))),
-			'}'
+		object: function(_0) { return prec('object',choice(
+			seq(
+				'{',
+				commaSep(optional(choice(
+					_0.pair,
+					_0.spread_element,
+					_0.method_definition,
+					alias(
+						choice(_0.identifier,_0._reserved_identifier),
+						_0.shorthand_property_identifier
+					)
+				))),
+				'}'
+			),
+			seq(
+				_0._indent,
+				newlineCommaSep(_0,choice(
+					_0.pair,
+					_0.spread_element,
+					_0.method_definition,
+					alias(
+						choice(_0.identifier,_0._reserved_identifier),
+						_0.shorthand_property_identifier
+					)
+				)),
+				_0._dedent
+			),
+			
+			seq(
+				'{',
+				_0._indent,
+				newlineCommaSep(_0,choice(
+					_0.pair,
+					_0.spread_element,
+					_0.method_definition,
+					alias(
+						choice(_0.identifier,_0._reserved_identifier),
+						_0.shorthand_property_identifier
+					)
+				)),
+				_0._dedent,
+				'}'
+			)
 		)); },
 		
 		pair: function(_0) { return seq(
@@ -491,14 +537,43 @@ module.exports = grammar(
 			field('value',_0.expression_statement)
 		); },
 		
-		class_declaration: function(_0) { return seq(
-			// repeat(field('decorator', $1.decorator))
-						'class',
-			field('name',_0.identifier),
-			optional(_0.class_heritage),
-			field('body',_0.class_body),
-			_0._dedent
-		// optional($1._automatic_semicolon)
+		array: function(_0) { return choice(
+			seq(
+				'[',
+				commaSep(optional(choice(
+					_0.expression_statement,
+					_0.spread_element
+				))),
+				']'
+			),
+			seq(
+				'[',
+				_0._indent,
+				repeat1(prec.left(seq(
+					choice(_0.expression_statement,_0.spread_element),
+					optional(','),
+					_0._newline
+				))),
+				_0._dedent,
+				']'
+			)
+		); },
+		class_declaration: function(_0) { return choice(
+			seq(
+				'class',
+				field('name',_0.identifier),
+				optional(_0.class_heritage),
+				_0._newline
+			),
+			seq(
+				// repeat(field('decorator', $1.decorator))
+								'class',
+				field('name',_0.identifier),
+				optional(_0.class_heritage),
+				field('body',_0.class_body),
+				_0._dedent
+			// optional($1._automatic_semicolon)
+			)
 		); },
 		
 		class_heritage: function(_0) { return seq(field('extends','<'),_0.expression_statement); },
@@ -507,6 +582,7 @@ module.exports = grammar(
 			_0._indent,
 			repeat(choice(
 				seq(field('member',_0.method_definition)),
+				// seq(field('member', $1.m_d))
 				seq(field('member',_0.setter)),
 				seq(field('member',_0.getter)),
 				seq(field('member',_0.field_definition))
@@ -528,6 +604,11 @@ module.exports = grammar(
 			field('body',_0.statement_block)
 		)); },
 		
+		
+		// m_d: do seq
+		// 	optional('static')
+		// 	'def'
+		// 	field('name', $1._property_name)
 		
 		method_definition: function(_0) { return prec(1,seq(
 			// repeat(field('decorator', $1.decorator))
@@ -564,7 +645,10 @@ module.exports = grammar(
 				')',
 				field('body',_0.expression_statement)
 			),
-			seq('do',field('body',_0.expression_statement))
+			seq('do',field('body',choice(
+				_0.expression_statement,
+				_0._statement_block
+			)))
 		)); },
 		
 		statement_block: function(_0) { return choice(

@@ -1,3 +1,11 @@
+def newlineCommaSep(_, rule)
+	seq
+		rule
+		repeat seq
+			# _._newline
+			seq optional(','), _._newline
+			rule
+	# seq(rule, repeat(seq(seq(optional(","), _._newline), rule)))
 
 def commaSep1(rule)
 	seq(rule, repeat(seq(",", rule)))
@@ -33,7 +41,7 @@ module.exports = grammar
 		[$1.primary_expression, $1.rest_pattern],
 		[$1.primary_expression, $1.pattern],
 		# [$1.primary_expression, $1._for_header],
-		# [$1.array, $1.array_pattern],
+		[$1.array, $1.array_pattern],
 		[$1.object, $1.object_pattern],
 		[$1.assignment_expression, $1.pattern],
 		[$1.assignment_expression, $1.object_assignment_pattern],
@@ -42,6 +50,9 @@ module.exports = grammar
 		# [$1.binary_expression, $1._initializer],
 		[$1.declaration, $1.primary_expression]
 		[$1.subscript_expression, $1.arrow_function]
+		[$1.program, $1.subscript_expression]
+		[$1._statement_block, $1.subscript_expression]
+		[$1._initializer, $1.subscript_expression]
 	],
 	
 	externals: do [
@@ -360,7 +371,7 @@ module.exports = grammar
 			$1.null
 			$1.import
 			$1.object
-			# $1.array
+			$1.array
 			$1.function_declaration
 			# $1.function
 			$1.arrow_function
@@ -390,16 +401,40 @@ module.exports = grammar
 		# 		$1.template_substitution
 		# 	'`'
 
-		object: do prec 'object', seq
-			'{'
-			commaSep optional choice
-				$1.pair,
-				$1.spread_element,
-				$1.method_definition,
-				alias
-					choice($1.identifier, $1._reserved_identifier)
-					$1.shorthand_property_identifier
-			'}'
+		object: do prec 'object', choice
+			seq
+				'{'
+				commaSep optional choice
+					$1.pair,
+					$1.spread_element,
+					$1.method_definition,
+					alias
+						choice($1.identifier, $1._reserved_identifier)
+						$1.shorthand_property_identifier
+				'}'
+			seq
+				$1._indent
+				newlineCommaSep $1, choice
+					$1.pair,
+					$1.spread_element,
+					$1.method_definition,
+					alias
+						choice($1.identifier, $1._reserved_identifier)
+						$1.shorthand_property_identifier
+				$1._dedent
+
+			seq
+				'{'
+				$1._indent
+				newlineCommaSep $1, choice
+					$1.pair,
+					$1.spread_element,
+					$1.method_definition,
+					alias
+						choice($1.identifier, $1._reserved_identifier)
+						$1.shorthand_property_identifier
+				$1._dedent
+				'}'
 
 		pair: do seq
 			field('key', $1._property_name)
@@ -441,15 +476,36 @@ module.exports = grammar
 			'='
 			field 'value', $1.expression_statement
 		
-		class_declaration: do seq(
-			# repeat(field('decorator', $1.decorator))
-			'class'
-			field('name', $1.identifier)
-			optional($1.class_heritage)
-			field('body', $1.class_body)
-			$1._dedent
-			# optional($1._automatic_semicolon)
-		)
+		array: do choice
+			seq
+				'['
+				commaSep optional choice 
+					$1.expression_statement
+					$1.spread_element
+				']'
+			seq
+				'['
+				$1._indent
+				repeat1 prec.left seq
+					choice $1.expression_statement, $1.spread_element
+					optional ','
+					$1._newline
+				$1._dedent
+				']'
+		class_declaration: do choice
+			seq
+				'class'
+				field('name', $1.identifier)
+				optional($1.class_heritage)
+				$1._newline
+			seq
+				# repeat(field('decorator', $1.decorator))
+				'class'
+				field('name', $1.identifier)
+				optional($1.class_heritage)
+				field('body', $1.class_body)
+				$1._dedent
+				# optional($1._automatic_semicolon)
 
 		class_heritage: do seq(field('extends', '<'), $1.expression_statement)
 
@@ -457,6 +513,7 @@ module.exports = grammar
 			$1._indent
 			repeat choice(
 				seq(field('member', $1.method_definition))
+				# seq(field('member', $1.m_d))
 				seq(field('member', $1.setter))
 				seq(field('member', $1.getter))
 				seq(field('member', $1.field_definition))
@@ -478,6 +535,11 @@ module.exports = grammar
 			field('body', $1.statement_block)	
 		)
 
+
+		# m_d: do seq
+		# 	optional('static')
+		# 	'def'
+		# 	field('name', $1._property_name)
 
 		method_definition: do prec 1, seq(
 			# repeat(field('decorator', $1.decorator))
@@ -510,7 +572,9 @@ module.exports = grammar
 					$1.formal_parameters
 				')'
 				field 'body', $1.expression_statement
-			seq 'do', field 'body', $1.expression_statement
+			seq 'do', field 'body', choice
+				$1.expression_statement
+				$1._statement_block
 		
 		statement_block: do choice(
 			$1.arrow_function,
