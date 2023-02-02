@@ -36,6 +36,18 @@
       {
         "type": "primary_expression",
         "named": true
+      },
+      {
+        "type": "self_closing_tag_element",
+        "named": true
+      },
+      {
+        "type": "tag_element",
+        "named": true
+      },
+      {
+        "type": "tag_fragment",
+        "named": true
       }
     ]
   },
@@ -1404,6 +1416,22 @@
     }
   },
   {
+    "type": "self_closing_tag_element",
+    "named": true,
+    "fields": {
+      "attribute": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "tag_attribute",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "setter",
     "named": true,
     "fields": {
@@ -1545,6 +1573,81 @@
     }
   },
   {
+    "type": "tag_attribute",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "property_identifier",
+          "named": true
+        },
+        {
+          "type": "self_closing_tag_element",
+          "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        },
+        {
+          "type": "tag_element",
+          "named": true
+        },
+        {
+          "type": "tag_expression",
+          "named": true
+        },
+        {
+          "type": "tag_fragment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "tag_element",
+    "named": true,
+    "fields": {
+      "attribute": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "tag_attribute",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "tag_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expression_statement",
+          "named": true
+        },
+        {
+          "type": "spread_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "tag_fragment",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "variable_declaration",
     "named": true,
     "fields": {},
@@ -1654,6 +1757,10 @@
     "named": false
   },
   {
+    "type": "/",
+    "named": false
+  },
+  {
     "type": "/=",
     "named": false
   },
@@ -1675,6 +1782,10 @@
   },
   {
     "type": "=",
+    "named": false
+  },
+  {
+    "type": ">",
     "named": false
   },
   {

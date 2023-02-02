@@ -98,7 +98,13 @@ module.exports = grammar(
 		_0._formal_parameter,
 		_0.statement,
 		_0.expression_statement,_0._identifier,
-		_0._reserved_identifier,_0._lhs_expression
+		_0._reserved_identifier,
+		_0._tag_attribute,
+		_0._tag_element_name,_0._tag_element,
+		_0._tag_attribute_name,
+		_0._tag_attribute_value,
+		// $1._tag_identifier
+		_0._lhs_expression
 	]; },
 	
 	
@@ -136,7 +142,8 @@ module.exports = grammar(
 		[_0.assignment_expression,_0.pattern],[_0.primary_expression,_0.statement_block,'object'],
 		// [$1._inline_statement_block, $1.subscript_expression]
 		[_0.import_statement,_0.import],
-		[_0.export_statement,_0.primary_expression]
+		[_0.export_statement,_0.primary_expression],
+		[_0.tag_attribute,_0.tag_expression,_0.primary_expression]
 	]; },
 	
 	
@@ -342,11 +349,73 @@ module.exports = grammar(
 			field('consequence',_0._suite)
 		); },
 		
+		_tag_element: function(_0) { return choice(
+			_0.tag_element,
+			_0.self_closing_tag_element
+		); },
+		
+		tag_element: function(_0) { return seq(
+			'<',
+			field('name',_0._tag_element_name),
+			repeat(field('attribute',_0._tag_attribute)),
+			'>'
+		); },
+		
+		tag_fragment: function() { return seq('<','>'); },
+		self_closing_tag_element: function(_0) { return seq(
+			'<',
+			field('name',_0._tag_element_name),
+			repeat(field('attribute',_0._tag_attribute)),
+			'/',
+			'>'
+		); },
+		
+		_tag_element_name: function(_0) { return choice(
+			_0._tag_identifier
+		// $1.tag_expression_identifier # <{args.attr()}>
+		
+		); },
+		_tag_identifier: function() { return /[a-zA-Z_][a-zA-Z\d_-]*[a-zA-Z\d_\-]*/; },
+		
+		_tag_attribute: function(_0) { return choice(
+			_0.tag_attribute
+		// $1.tag_expression
+		
+		); },
+		tag_attribute: function(_0) { return seq(
+			choice(
+				_0._tag_attribute_name
+			// $1.inline_style
+			),
+			optional(seq(
+				'=',
+				_0._tag_attribute_value
+			))
+		); },
+		
+		_tag_attribute_name: function(_0) { return choice(
+			alias(_0._tag_identifier,_0.property_identifier)
+		// $1.tag_namespace_name
+		); },
+		
+		_tag_attribute_value: function(_0) { return choice(
+			_0.string,
+			_0.tag_expression,
+			_0._tag_element,
+			_0.tag_fragment
+		); },
+		
+		tag_expression: function(_0) { return choice(
+			_0.expression_statement,
+			_0.spread_element
+		// $1.sequence_expression
+		); },
+		
 		expression_statement: function(_0) { return choice(
 			_0.primary_expression,
 			// $1.glimmer_template
-			// $1._jsx_element
-			// $1.jsx_fragment
+			_0._tag_element,
+			_0.tag_fragment,
 			_0.assignment_expression,
 			_0.augmented_assignment_expression
 		// $1.await_expression

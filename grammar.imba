@@ -87,13 +87,13 @@ module.exports = grammar
 	# 	$1._semicolon
 		$1._identifier
 		$1._reserved_identifier
-	# 	$1._jsx_attribute
-	# 	$1._jsx_element_name
-	# 	$1._jsx_child
-	# 	$1._jsx_element
-	# 	$1._jsx_attribute_name
-	# 	$1._jsx_attribute_value
-	# 	$1._jsx_identifier
+		$1._tag_attribute
+		$1._tag_element_name
+	# 	$1._tag_child
+		$1._tag_element
+		$1._tag_attribute_name
+		$1._tag_attribute_value
+		# $1._tag_identifier
 		$1._lhs_expression
 	],
 
@@ -135,6 +135,7 @@ module.exports = grammar
 		# [$1._inline_statement_block, $1.subscript_expression]
 		[$1.import_statement, $1.import]
 		[$1.export_statement, $1.primary_expression]
+		[$1.tag_attribute, $1.tag_expression, $1.primary_expression]
 	],
 
 
@@ -306,11 +307,62 @@ module.exports = grammar
 			field('condition', $1.expression_statement)
 			field('consequence', $1._suite)
 
+		_tag_element: do choice
+			$1.tag_element
+			$1.self_closing_tag_element
+
+		tag_element: do seq
+			'<'
+			field 'name', $1._tag_element_name
+			repeat field 'attribute', $1._tag_attribute
+			'>'
+		
+		tag_fragment: do seq '<', '>'
+		self_closing_tag_element: do seq
+			'<'
+			field 'name', $1._tag_element_name
+			repeat field 'attribute', $1._tag_attribute
+			'/'
+			'>'
+
+		_tag_element_name: do choice
+			$1._tag_identifier
+			# $1.tag_expression_identifier # <{args.attr()}>
+			
+		_tag_identifier: do /[a-zA-Z_][a-zA-Z\d_-]*[a-zA-Z\d_\-]*/
+		
+		_tag_attribute: do choice
+			$1.tag_attribute
+			# $1.tag_expression
+			
+		tag_attribute: do seq
+			choice
+				$1._tag_attribute_name
+				# $1.inline_style
+			optional seq
+				'='
+				$1._tag_attribute_value
+
+		_tag_attribute_name: do choice
+			alias $1._tag_identifier, $1.property_identifier
+			# $1.tag_namespace_name
+		
+		_tag_attribute_value: do choice
+			$1.string
+			$1.tag_expression
+			$1._tag_element
+			$1.tag_fragment
+
+		tag_expression: do choice
+			$1.expression_statement
+			$1.spread_element
+			# $1.sequence_expression
+
 		expression_statement: do choice
 			$1.primary_expression
 			# $1.glimmer_template
-			# $1._jsx_element
-			# $1.jsx_fragment
+			$1._tag_element
+			$1.tag_fragment
 			$1.assignment_expression
 			$1.augmented_assignment_expression
 			# $1.await_expression
