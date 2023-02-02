@@ -8,7 +8,8 @@
     "build": "wireit",
     "wasm": "wireit",
     "pg": "wireit",
-		"test": "wireit"
+		"test": "wireit",
+		"only": "npm run test --watch -- -f only -d"
   },
 	"wireit":{
 		"wasm": {
