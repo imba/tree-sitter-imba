@@ -67,7 +67,7 @@
   "devDependencies": {
     "imba": "^2.0.0-alpha.226",
     "nodemon": "^2.0.20",
-    "tree-sitter-cli": "^0.19.5"
+    "tree-sitter-cli": "^0.19.3"
   },
   "tree-sitter": [
     {
