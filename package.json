@@ -8,48 +8,66 @@
     "build": "wireit",
     "wasm": "wireit",
     "pg": "wireit",
-		"test": "wireit",
-		"only": "npm run test --watch -- -f only -d"
+    "test": "wireit",
+    "only": "npm run test --watch -- -f only -d"
   },
-	"wireit":{
-		"wasm": {
-			"command": "tree-sitter build-wasm",
-			"dependencies": ["build"]
-		},
-		"pg" :{
-			"command": "tree-sitter playground",
-			"dependencies": ["wasm"],
-			"service": true
-		},
-		"build": {
-			"command": "node-gyp build",
-			"dependencies": ["generate-grammar"]
-		},
-		"compile-grammar": {
-			"command": "imbac grammar.imba --cjs",
-			"output": ["grammar.js"],
-			"files": ["grammar.imba", "src/scanner.cc"]
-		},
-		"generate-grammar": {
-			"command": "tree-sitter generate grammar.js",
-			"dependencies": ["compile-grammar"]
-		},
-		"test": {
-			"command": "tree-sitter test",
-			"dependencies": ["generate-grammar"],
-			"files": ["test/**/*"]
-		}
-	},
+  "wireit": {
+    "wasm": {
+      "command": "tree-sitter build-wasm",
+      "dependencies": [
+        "build"
+      ]
+    },
+    "pg": {
+      "command": "tree-sitter playground",
+      "dependencies": [
+        "wasm"
+      ],
+      "service": true
+    },
+    "build": {
+      "command": "node-gyp build",
+      "dependencies": [
+        "generate-grammar"
+      ]
+    },
+    "compile-grammar": {
+      "command": "imbac grammar.imba --cjs",
+      "output": [
+        "grammar.js"
+      ],
+      "files": [
+        "grammar.imba",
+        "src/scanner.cc"
+      ]
+    },
+    "generate-grammar": {
+      "command": "tree-sitter generate ",
+      "dependencies": [
+        "compile-grammar"
+      ]
+    },
+    "test": {
+      "command": "tree-sitter test",
+      "dependencies": [
+        "generate-grammar"
+      ],
+      "files": [
+        "test/**/*"
+      ]
+    }
+  },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "nan": "^2.17.0"
+    "nan": "^2.17.0",
+    "wireit": "^0.9.5"
   },
   "devDependencies": {
     "imba": "^2.0.0-alpha.226",
     "nodemon": "^2.0.20",
-    "tree-sitter-cli": "^0.20.7"
+    "tree-sitter-cli": "^0.19.5"
   },
   "tree-sitter": [
     {
