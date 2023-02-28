@@ -33,11 +33,7 @@
 	npm run build
 	```
 
-
-## Installation in Neovim
-TODO ..
 <details>
-
 <summary>## Installation With Helix</summary>
 <br>
 1. Find helix runtime path
